@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+  <!-- Generic Tissue Cell -->
+  <defs>
+    <radialGradient id="cell_grad" cx="40%" cy="40%" r="60%">
+      <stop offset="0%" style="stop-color:#8899cc"/>
+      <stop offset="100%" style="stop-color:#445588"/>
+    </radialGradient>
+  </defs>
+  <!-- Cell membrane (irregular shape) -->
+  <path d="M24,4 C36,4 44,14 44,24 C44,36 34,44 24,44 C12,44 4,34 4,24 C4,12 14,4 24,4" 
+        fill="url(#cell_grad)" stroke="#334466" stroke-width="2"/>
+  <!-- Nucleus -->
+  <ellipse cx="24" cy="26" rx="10" ry="8" fill="#223355"/>
+  <!-- Highlight -->
+  <ellipse cx="18" cy="18" rx="6" ry="4" fill="#aabbdd" opacity="0.4"/>
+</svg>

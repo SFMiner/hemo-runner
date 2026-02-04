@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <!-- Red Blood Cell icon for Hemo-Runner -->
+  <defs>
+    <radialGradient id="rbc_gradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#ff6666"/>
+      <stop offset="70%" style="stop-color:#cc0000"/>
+      <stop offset="100%" style="stop-color:#990000"/>
+    </radialGradient>
+  </defs>
+  <!-- Main RBC body -->
+  <ellipse cx="64" cy="64" rx="56" ry="40" fill="url(#rbc_gradient)"/>
+  <!-- Central dimple (characteristic biconcave shape) -->
+  <ellipse cx="64" cy="64" rx="28" ry="18" fill="#990000" opacity="0.5"/>
+  <!-- Highlight -->
+  <ellipse cx="48" cy="50" rx="12" ry="8" fill="#ff9999" opacity="0.4"/>
+</svg>

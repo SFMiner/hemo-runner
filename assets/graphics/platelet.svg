@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- Platelet Cluster (Blood Clot) -->
+  <defs>
+    <radialGradient id="plat_grad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#ffdd88"/>
+      <stop offset="100%" style="stop-color:#cc9944"/>
+    </radialGradient>
+  </defs>
+  <!-- Multiple overlapping platelets to form cluster -->
+  <ellipse cx="22" cy="26" rx="14" ry="10" fill="url(#plat_grad)" stroke="#aa7733" stroke-width="1"/>
+  <ellipse cx="38" cy="22" rx="12" ry="9" fill="url(#plat_grad)" stroke="#aa7733" stroke-width="1"/>
+  <ellipse cx="32" cy="36" rx="15" ry="11" fill="url(#plat_grad)" stroke="#aa7733" stroke-width="1"/>
+  <ellipse cx="44" cy="38" rx="10" ry="8" fill="url(#plat_grad)" stroke="#aa7733" stroke-width="1"/>
+  <ellipse cx="18" cy="40" rx="11" ry="8" fill="url(#plat_grad)" stroke="#aa7733" stroke-width="1"/>
+  <!-- Sticky strands -->
+  <path d="M20,30 Q32,28 40,32" stroke="#ddbb66" stroke-width="2" fill="none" opacity="0.6"/>
+  <path d="M26,36 Q34,40 44,34" stroke="#ddbb66" stroke-width="2" fill="none" opacity="0.6"/>
+</svg>

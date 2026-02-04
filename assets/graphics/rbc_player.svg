@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- Red Blood Cell (RBC) - Biconcave disc shape -->
+  <defs>
+    <radialGradient id="rbc_grad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#ff4444"/>
+      <stop offset="60%" style="stop-color:#cc0000"/>
+      <stop offset="100%" style="stop-color:#880000"/>
+    </radialGradient>
+    <radialGradient id="dimple_grad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#880000"/>
+      <stop offset="100%" style="stop-color:#aa2222"/>
+    </radialGradient>
+  </defs>
+  <!-- Main body -->
+  <ellipse cx="32" cy="32" rx="28" ry="20" fill="url(#rbc_grad)"/>
+  <!-- Central dimple (biconcave characteristic) -->
+  <ellipse cx="32" cy="32" rx="14" ry="10" fill="url(#dimple_grad)"/>
+  <!-- Highlight -->
+  <ellipse cx="22" cy="26" rx="8" ry="5" fill="#ff6666" opacity="0.4"/>
+</svg>
