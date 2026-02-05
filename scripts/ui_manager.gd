@@ -218,7 +218,7 @@ func _on_continue_pressed() -> void:
 
 ## Show game over screen
 func _on_game_over() -> void:
-	show_popup("GAME OVER\nYou were trapped by a blood clot!", false)
+	show_popup("GAME OVER\nYou were trapped by a blood clot!\n\nPress any key to restart", false)
 
 
 ## Show heart zone message

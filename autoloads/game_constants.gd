@@ -28,7 +28,7 @@ enum SlotState {
 }
 
 # === ZONE TIMING ===
-const TISSUE_ZONE_DURATION: float = 55.0  # Seconds in tissue zone
+const TISSUE_ZONE_DURATION: float = 15.0  # Seconds in tissue zone
 const LUNG_ZONE_DURATION: float = 5.0     # Seconds in lung zone
 const HEART_ZONE_DURATION: float = 3.0    # Seconds for heart transition
 const FULL_LOOP_DURATION: float = TISSUE_ZONE_DURATION + (HEART_ZONE_DURATION * 2) + LUNG_ZONE_DURATION
@@ -49,6 +49,12 @@ const CELL_GAP_MAX: float = 4.0
 const TISSUE_CELL_TEXTURE_VARIANTS: int = 4
 const EXCHANGE_CHANCE: float = 0.7  # 70% of cells need O2 exchange
 const PLATELET_CHANCE_PER_LOOP: float = 0.5  # 50% chance per full body loop
+
+# Cell exchange amounts (0-2 O2 needed, 0-2 CO2 to give)
+const CELL_O2_NEED_MIN: int = 0
+const CELL_O2_NEED_MAX: int = 2
+const CELL_CO2_GIVE_MIN: int = 0
+const CELL_CO2_GIVE_MAX: int = 2
 
 # === WIN CONDITION ===
 const DELIVERIES_FOR_MISSION_COMPLETE: int = 10
@@ -94,6 +100,16 @@ func get_random_group_size() -> int:
 ## Simulates that other RBCs are also doing work in the bloodstream
 func cell_needs_exchange() -> bool:
 	return randf() < EXCHANGE_CHANCE
+
+
+## Get random amount of O2 a cell needs (0-2)
+func get_cell_o2_need() -> int:
+	return randi_range(CELL_O2_NEED_MIN, CELL_O2_NEED_MAX)
+
+
+## Get random amount of CO2 a cell has to give (0-2)
+func get_cell_co2_available() -> int:
+	return randi_range(CELL_CO2_GIVE_MIN, CELL_CO2_GIVE_MAX)
 
 
 ## Calculate screen position from world position given camera offset

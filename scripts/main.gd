@@ -10,20 +10,26 @@ extends Node2D
 # === NODE REFERENCES ===
 @onready var world_scroll_anchor: Node2D = $WorldScrollAnchor
 @onready var camera: Camera2D = $WorldScrollAnchor/Camera2D
-@onready var player: Player = $Player
+@onready var player: Player = $WorldScrollAnchor/Player
 @onready var spawner: Spawner = $Spawner
 @onready var zone_manager: ZoneManager = $ZoneManager
 @onready var ui_manager: UIManager = $UI
 @onready var entities: Node2D = $Entities  # Parent for spawned cells/platelets
 @onready var background: Sprite2D = $Background
+@onready var background2: Sprite2D = $Background2
+
+# === BACKGROUND CONSTANTS ===
+const BACKGROUND_WIDTH: float = 2560.0
 
 # === SCROLL STATE ===
 var world_scroll_offset: float = 0.0
 var scroll_active: bool = true
 
-# === HEART ZONE VISUALS ===
-var background_spin_active: bool = false
-var background_spin_speed: float = 0.0
+# === VORTEX STATE ===
+var vortex_active: bool = false
+var vortex_rotation: float = 0.0
+var vortex_speed: float = 0.0
+
 
 
 func _ready() -> void:
@@ -56,40 +62,76 @@ func _ready() -> void:
 	_start_game()
 
 
+func _input(event: InputEvent) -> void:
+	# Allow restart after game over
+	if GameManager.current_state == GameManager.GameState.GAME_OVER:
+		if event is InputEventKey or event is InputEventMouseButton:
+			if event.pressed:
+				restart_game()
+
+
 func _process(delta: float) -> void:
+	# Handle vortex rotation (runs even during cutscenes)
+	if vortex_active:
+		vortex_rotation += vortex_speed * delta
+		_apply_vortex_rotation()
+
 	if not GameManager.is_playing():
 		return
-	
+
 	# Update world scroll
 	if scroll_active:
 		_update_world_scroll(delta)
-	
+
+	# Loop backgrounds
+	_update_background_loop()
+
 	# Update spawner position
 	if spawner:
 		spawner.set_world_scroll_position(world_scroll_offset)
-	
+
 	# Update player world offset
 	if player:
 		player.set_world_offset(world_scroll_offset)
-	
-	# Handle heart zone background spin
-	if background_spin_active and background:
-		background.rotation += background_spin_speed * delta
-	
+
 	# Update zone display
 	if zone_manager and ui_manager:
 		ui_manager.update_zone_display(zone_manager.get_zone_name())
-	
+
 	# Clean up off-screen entities
 	_cleanup_entities()
+
+
+## Apply vortex rotation by rotating the world scroll anchor
+func _apply_vortex_rotation() -> void:
+	if world_scroll_anchor:
+		# Rotate around the camera center point
+		world_scroll_anchor.rotation = vortex_rotation
 
 
 ## Update the world scroll (camera moves right at FLOW_SPEED)
 func _update_world_scroll(delta: float) -> void:
 	world_scroll_offset += GameConstants.FLOW_SPEED * delta
-	
+
 	if world_scroll_anchor:
 		world_scroll_anchor.position.x = world_scroll_offset
+
+
+## Loop backgrounds to create infinite scrolling effect
+func _update_background_loop() -> void:
+	# Camera center x position in world coordinates
+	var camera_x: float = world_scroll_offset + GameConstants.RESOLUTION.x / 2.0
+
+	# Check each background - if its right edge is behind the camera's left edge, wrap it forward
+	if background:
+		var bg_right_edge: float = background.position.x + BACKGROUND_WIDTH
+		if bg_right_edge < world_scroll_offset:
+			background.position.x += BACKGROUND_WIDTH * 2
+
+	if background2:
+		var bg2_right_edge: float = background2.position.x + BACKGROUND_WIDTH
+		if bg2_right_edge < world_scroll_offset:
+			background2.position.x += BACKGROUND_WIDTH * 2
 
 
 ## Start the game (or restart)
@@ -105,17 +147,25 @@ func _start_game() -> void:
 	
 	# Reset scroll
 	world_scroll_offset = 0.0
+	scroll_active = true
 	if world_scroll_anchor:
 		world_scroll_anchor.position.x = 0.0
-	
-	# Reset background rotation
+
+	# Reset background positions
 	if background:
-		background.rotation = 0.0
-	background_spin_active = false
+		background.position.x = 640
+	if background2:
+		background2.position.x = 640 + BACKGROUND_WIDTH
 	
-	# Position player at center-left of screen
+	# Reset camera and vortex
+	if camera:
+		camera.rotation = 0.0
+	_stop_vortex_rotation()
+	
+	# Reset and position player at center-left of screen
 	if player:
-		player.global_position = Vector2(200, GameConstants.RESOLUTION.y / 2.0)
+		player.reset()
+		player.position = Vector2(200, GameConstants.RESOLUTION.y / 2.0)
 	
 	# Clear existing entities
 	_clear_all_entities()
@@ -141,36 +191,47 @@ func _on_zone_changed(new_zone: int) -> void:
 
 ## Enter heart zone (cutscene)
 func _on_heart_zone_entered(going_to_lungs: bool) -> void:
-	# Start background spinning
-	background_spin_active = true
-	background_spin_speed = randf_range(-3.0, 3.0)  # Random spin direction/speed
-	if abs(background_spin_speed) < 1.0:
-		background_spin_speed = 2.0 if randf() > 0.5 else -2.0
-	
+	# Start vortex rotation
+	_start_vortex_rotation()
+
 	# Put player in cutscene mode
 	if player:
 		player.enter_cutscene()
-		# Center player on screen during cutscene
+		# Center player on screen during cutscene (use local position, not global)
 		var tween: Tween = create_tween()
-		tween.tween_property(player, "global_position", 
-			Vector2(GameConstants.RESOLUTION.x / 2.0, GameConstants.RESOLUTION.y / 2.0), 
+		tween.tween_property(player, "position",
+			Vector2(GameConstants.RESOLUTION.x / 2.0, GameConstants.RESOLUTION.y / 2.0),
 			0.5)
-	
+
 	# Show heart zone message
 	if ui_manager:
 		ui_manager.show_heart_zone_message(going_to_lungs)
 
 
+## Start the vortex rotation effect
+func _start_vortex_rotation() -> void:
+	vortex_active = true
+	vortex_rotation = 0.0
+	# 2 rotations over heart zone duration, randomize direction
+	vortex_speed = (2.0 * TAU) / GameConstants.HEART_ZONE_DURATION
+	if randf() > 0.5:
+		vortex_speed = -vortex_speed
+
+
+## Stop the vortex rotation effect
+func _stop_vortex_rotation() -> void:
+	vortex_active = false
+	vortex_rotation = 0.0
+	# Reset the world scroll anchor rotation
+	if world_scroll_anchor:
+		world_scroll_anchor.rotation = 0.0
+
+
 ## Exit heart zone
 func _on_heart_zone_exited() -> void:
-	# Stop background spinning
-	background_spin_active = false
-	
-	# Smoothly return background to normal
-	if background:
-		var tween: Tween = create_tween()
-		tween.tween_property(background, "rotation", 0.0, 0.5)
-	
+	# Stop vortex rotation
+	_stop_vortex_rotation()
+
 	# Return player control
 	if player:
 		player.exit_cutscene()

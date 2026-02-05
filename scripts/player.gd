@@ -63,15 +63,15 @@ func _physics_process(delta: float) -> void:
 ## Handle normal player-controlled movement
 func _handle_normal_movement(delta: float) -> void:
 	var input_direction: Vector2 = _get_input_direction()
-	
-	# Player moves at PLAYER_SPEED relative to the screen
-	# The camera/world is already moving at FLOW_SPEED to the right
+
+	# Player moves at PLAYER_SPEED relative to the screen/parent
 	screen_velocity = input_direction * GameConstants.PLAYER_SPEED
-	
-	# Apply movement
+
+	# Player is a child of WorldScrollAnchor, so movement is in local space
+	# No need to compensate for world scroll - the parent handles that
 	velocity = screen_velocity
 	move_and_slide()
-	
+
 	# Clamp to screen bounds (top/bottom only - left edge is game over)
 	_clamp_to_screen_bounds()
 
@@ -100,12 +100,12 @@ func _get_input_direction() -> Vector2:
 
 
 ## Handle state when stuck on a platelet
-## The player cannot move; they drift left with the camera flow
+## The player cannot move; they drift left relative to the screen
 func _handle_stuck_state(delta: float) -> void:
-	# When stuck, player's velocity relative to screen is zero
-	# But the world is still scrolling, so they drift left
-	# This is handled by the world scroll - player just doesn't move
-	velocity = Vector2.ZERO
+	# Player is child of WorldScrollAnchor which moves right
+	# To drift left on screen, we need negative velocity in local space
+	# This simulates being stuck in the bloodstream while camera moves on
+	velocity = Vector2(-GameConstants.FLOW_SPEED, 0)
 	move_and_slide()
 
 
@@ -119,26 +119,28 @@ func _handle_cutscene_state(delta: float) -> void:
 ## Clamp player position to screen bounds
 func _clamp_to_screen_bounds() -> void:
 	var viewport_size: Vector2 = get_viewport_rect().size
-	var half_height: float = 32.0  # Approximate collision radius
-	
+	var half_size: float = 32.0  # Approximate collision radius
+
+	# Player is child of WorldScrollAnchor, position is in local/screen space
 	# Clamp vertical position
-	global_position.y = clamp(
-		global_position.y,
-		half_height,
-		viewport_size.y - half_height
+	position.y = clamp(
+		position.y,
+		half_size,
+		viewport_size.y - half_size
 	)
-	
+
 	# Clamp right edge (can't go off right side of screen)
-	var max_x: float = viewport_size.x - half_height
-	if global_position.x > max_x:
-		global_position.x = max_x
+	var max_x: float = viewport_size.x - half_size
+	if position.x > max_x:
+		position.x = max_x
 
 
 ## Check if player has been pushed off the left edge (game over)
 func _check_left_edge() -> void:
 	var half_width: float = 32.0  # Approximate collision radius
-	
-	if global_position.x < -half_width:
+
+	# Player position is in local/screen space, check against screen left
+	if position.x < -half_width:
 		left_screen.emit()
 		GameManager.trigger_game_over()
 
@@ -194,3 +196,13 @@ func set_world_offset(offset: float) -> void:
 ## Get current cargo manager for external access
 func get_cargo_manager() -> Node:
 	return cargo_manager
+
+
+## Reset player state for new game
+func reset() -> void:
+	current_state = State.NORMAL
+	screen_velocity = Vector2.ZERO
+	world_offset = 0.0
+	velocity = Vector2.ZERO
+	if cargo_manager and cargo_manager.has_method("fill_with_o2"):
+		cargo_manager.fill_with_o2()

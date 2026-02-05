@@ -1,35 +1,40 @@
-[gd_scene load_steps=3 format=3 uid="uid://main_scene_001"]
+[gd_scene load_steps=7 format=3 uid="uid://btt6lhgqyx76s"]
 
-[ext_resource type="Script" uid="uid://main_script_001" path="res://scripts/main.gd" id="1_main"]
-[ext_resource type="Script" uid="uid://ui_manager_001" path="res://scripts/ui_manager.gd" id="2_ui"]
+[ext_resource type="Script" uid="uid://dd8cj0qltp2ti" path="res://scripts/main.gd" id="1_main"]
+[ext_resource type="Texture2D" uid="uid://c2loo3ugb0t0y" path="res://assets/graphics/background.png" id="2_tefeu"]
+[ext_resource type="Script" uid="uid://yerygvntlyel" path="res://scripts/ui_manager.gd" id="2_ui"]
+[ext_resource type="PackedScene" uid="uid://dvdpkavjfnmml" path="res://scenes/player.tscn" id="3_player"]
+[ext_resource type="Script" uid="uid://dtl3pmgipulp5" path="res://scripts/spawner.gd" id="4_spawner"]
+[ext_resource type="Script" uid="uid://bscuwy4xkwy1o" path="res://scripts/zone_manager.gd" id="5_zone_manager"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_main")
 
 [node name="Background" type="Sprite2D" parent="."]
 position = Vector2(640, 360)
-scale = Vector2(20, 20)
+texture = ExtResource("2_tefeu")
+offset = Vector2(640, 0)
+
+[node name="Background2" type="Sprite2D" parent="."]
+position = Vector2(3190, 360)
+texture = ExtResource("2_tefeu")
+offset = Vector2(640, 0)
 
 [node name="WorldScrollAnchor" type="Node2D" parent="."]
 
 [node name="Camera2D" type="Camera2D" parent="WorldScrollAnchor"]
 position = Vector2(640, 360)
 
-[node name="Entities" type="Node2D" parent="."]
-
-[node name="Player" type="CharacterBody2D" parent="." groups=["player"]]
+[node name="Player" parent="WorldScrollAnchor" instance=ExtResource("3_player")]
 position = Vector2(200, 360)
 
-[node name="Sprite2D" type="Sprite2D" parent="Player"]
-scale = Vector2(2, 2)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
-
-[node name="CargoManager" type="Node" parent="Player"]
+[node name="Entities" type="Node2D" parent="."]
 
 [node name="Spawner" type="Node" parent="."]
+script = ExtResource("4_spawner")
 
 [node name="ZoneManager" type="Node" parent="."]
+script = ExtResource("5_zone_manager")
 
 [node name="UI" type="CanvasLayer" parent="."]
 script = ExtResource("2_ui")
@@ -51,7 +56,6 @@ grow_horizontal = 2
 
 [node name="CargoDisplay" type="HBoxContainer" parent="UI/HUD"]
 layout_mode = 1
-anchors_preset = 0
 offset_left = 20.0
 offset_top = 20.0
 offset_right = 200.0

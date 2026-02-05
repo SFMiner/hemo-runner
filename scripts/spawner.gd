@@ -190,3 +190,5 @@ func reset() -> void:
 	cells_remaining_in_group = 0
 	platelet_spawned_this_loop = false
 	last_loop_count = 0
+	world_scroll_position = 0.0
+	last_group_end_x = 0.0

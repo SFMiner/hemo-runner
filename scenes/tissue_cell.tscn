@@ -1,17 +1,18 @@
-[gd_scene load_steps=3 format=3 uid="uid://tissue_cell_001"]
+[gd_scene load_steps=4 format=3 uid="uid://dnmvwmtwh7wvf"]
 
-[ext_resource type="Script" uid="uid://tissue_cell_script_001" path="res://scripts/tissue_cell.gd" id="1_tissue"]
+[ext_resource type="Script" uid="uid://v1nb5jl3t8r1" path="res://scripts/tissue_cell.gd" id="1_tissue"]
+[ext_resource type="Texture2D" uid="uid://cddpryon6woyn" path="res://assets/graphics/tissue_cell.svg" id="2_opl7v"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_tissue"]
 radius = 24.0
 
 [node name="TissueCell" type="Area2D" groups=["tissue_cells"]]
 collision_layer = 2
-collision_mask = 1
 script = ExtResource("1_tissue")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(1.5, 1.5)
+texture = ExtResource("2_opl7v")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_tissue")

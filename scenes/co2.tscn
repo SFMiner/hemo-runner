@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://dugcn814ns48l"]
+
+[node name="CO2" type="Label"]
+offset_left = -1.0
+offset_right = 31.0
+offset_bottom = 23.0
+theme_override_colors/font_color = Color(0.3301249, 0.32902646, 0.32603347, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 3
+text = "CO2"

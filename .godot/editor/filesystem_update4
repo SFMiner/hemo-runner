@@ -1,0 +1,14 @@
+res://scenes/tissue_cell.tscn
+res://scenes/player.tscn
+res://scenes/platelet.tscn
+res://scripts/player.gd
+res://scenes/main.tscn
+res://scripts/main.gd
+res://scenes/Lebel.tscn
+res://scenes/co2.tscn
+res://scenes/oxygen.tscn
+res://scripts/ui_manager.gd
+res://scripts/spawner.gd
+res://autoloads/game_constants.gd
+res://scripts/cargo_manager.gd
+res://scripts/tissue_cell.gd

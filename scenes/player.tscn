@@ -1,21 +1,77 @@
-[gd_scene load_steps=4 format=3 uid="uid://player_scene_001"]
+[gd_scene load_steps=7 format=3 uid="uid://dvdpkavjfnmml"]
 
-[ext_resource type="Script" uid="uid://player_script_001" path="res://scripts/player.gd" id="1_player"]
-[ext_resource type="Script" uid="uid://cargo_manager_001" path="res://scripts/cargo_manager.gd" id="2_cargo"]
+[ext_resource type="Script" uid="uid://cg317nuhvcy5j" path="res://scripts/player.gd" id="1_player"]
+[ext_resource type="Script" uid="uid://ck1hecu2fliy7" path="res://scripts/cargo_manager.gd" id="2_cargo"]
+[ext_resource type="Texture2D" uid="uid://dst4wdjuvru6w" path="res://assets/graphics/rbc_player.svg" id="2_qhqgy"]
+[ext_resource type="PackedScene" uid="uid://cyyenplmfmfid" path="res://scenes/oxygen.tscn" id="4_qlg0r"]
+[ext_resource type="PackedScene" uid="uid://dugcn814ns48l" path="res://scenes/co2.tscn" id="5_tuyoq"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_player"]
 radius = 32.0
 
 [node name="Player" type="CharacterBody2D" groups=["player"]]
-collision_layer = 1
 collision_mask = 2
 script = ExtResource("1_player")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-scale = Vector2(2, 2)
+texture = ExtResource("2_qhqgy")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_player")
 
 [node name="CargoManager" type="Node" parent="."]
 script = ExtResource("2_cargo")
+
+[node name="O2" type="Node2D" parent="."]
+
+[node name="02_1" parent="O2" instance=ExtResource("4_qlg0r")]
+offset_left = -21.0
+offset_top = -21.0
+offset_right = -2.0
+offset_bottom = 2.0
+metadata/_edit_use_anchors_ = true
+
+[node name="02_2" parent="O2" instance=ExtResource("4_qlg0r")]
+offset_left = -21.0
+offset_top = -1.0
+offset_right = -2.0
+offset_bottom = 22.0
+metadata/_edit_use_anchors_ = true
+
+[node name="02_3" parent="O2" instance=ExtResource("4_qlg0r")]
+offset_left = 3.0
+offset_top = -21.0
+offset_right = 22.0
+offset_bottom = 2.0
+metadata/_edit_use_anchors_ = true
+
+[node name="02_4" parent="O2" instance=ExtResource("4_qlg0r")]
+offset_left = 1.0
+offset_right = 20.0
+offset_bottom = 23.0
+
+[node name="CO2" type="Node2D" parent="."]
+
+[node name="CO2_1" parent="CO2" instance=ExtResource("5_tuyoq")]
+offset_left = -37.0
+offset_top = -37.0
+offset_right = -8.0
+offset_bottom = -14.0
+
+[node name="CO2_2" parent="CO2" instance=ExtResource("5_tuyoq")]
+offset_left = -33.0
+offset_top = 14.0
+offset_right = -4.0
+offset_bottom = 37.0
+
+[node name="CO2_3" parent="CO2" instance=ExtResource("5_tuyoq")]
+offset_left = 10.0
+offset_top = 15.0
+offset_right = 39.0
+offset_bottom = 38.0
+
+[node name="CO2_4" parent="CO2" instance=ExtResource("5_tuyoq")]
+offset_left = 8.0
+offset_top = -37.0
+offset_right = 37.0
+offset_bottom = -14.0
